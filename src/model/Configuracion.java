@@ -6,6 +6,8 @@ package model;
  */
 public class Configuracion {
     
+    private static Configuracion instancia;
+    
     private int llegada_cliente;
     private int consulta_desde;
     private int consulta_hasta;
@@ -33,6 +35,14 @@ public class Configuracion {
         this.libPrestado_leer = 40;
         this.tiempo_simulacion = 300;
         this.cantidad_simulacion = 100000;
+    }
+    public static Configuracion getConfiguracion()
+    {
+        if (instancia == null)
+        {
+            instancia = new Configuracion();
+        }
+        return instancia;
     }
     
     public int getLlegadaCliente(){

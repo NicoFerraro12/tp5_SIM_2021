@@ -3,6 +3,7 @@ package front;
 import control.*;
 
 import javax.swing.*;
+import model.Configuracion;
 
 public class VentanaPrincipal extends javax.swing.JFrame {
 
@@ -324,11 +325,27 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_resetSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetSimActionPerformed
-        // TODO add your handling code here:
+        limpiarSimulacion();
     }//GEN-LAST:event_btn_resetSimActionPerformed
 
+    
+    private void limpiarSimulacion(){
+        txt_promPermanencia.setText("");
+        txt_tiempo_sim.setText("");
+        txt_cantidad_sim.setText("");
+        txt_consulta_desde.setText("");
+        txt_consulta_hasta.setText("");
+        txt_llegada_cliente.setText("");
+    }
+    
     private void btn_configuracionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_configuracionActionPerformed
-        // TODO add your handling code here:
+        Configuracion config = Configuracion.getConfiguracion();
+        txt_promPermanencia.setText("" + config.getPromedioPermanencia());
+        txt_tiempo_sim.setText("" + config.getTiempoSimulacion());
+        txt_cantidad_sim.setText("" + config.getCantidadSimulacion());
+        txt_consulta_desde.setText("" + config.getConsultaDesde());
+        txt_consulta_hasta.setText("" + config.getConsultaHasta());
+        txt_llegada_cliente.setText("" + config.getLlegadaCliente());
     }//GEN-LAST:event_btn_configuracionActionPerformed
 
     private void txt_promPermanenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_promPermanenciaActionPerformed
