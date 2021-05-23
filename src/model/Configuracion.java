@@ -19,6 +19,8 @@ public class Configuracion {
     
     private int libPrestado_retira;
     private int libPrestado_leer;
+    private int rango_desde;
+    private int rango_hasta;
     
     private double tiempo_simulacion;
     private int cantidad_simulacion;
@@ -34,7 +36,9 @@ public class Configuracion {
         this.libPrestado_retira = 60;
         this.libPrestado_leer = 40;
         this.tiempo_simulacion = 300;
-        this.cantidad_simulacion = 100000;
+        this.cantidad_simulacion = 1000;
+        this.rango_desde = 0;
+        this.rango_hasta = 1000;
     }
     public static Configuracion getConfiguracion()
     {
@@ -131,5 +135,21 @@ public class Configuracion {
     
     public void setCantidadSimulacion(int cantidad){
         this.cantidad_simulacion = cantidad;
+    }
+    
+    public int getRangoDesde(){
+        return this.rango_desde;
+    }
+    
+    public void setRangoDesde(int desde){
+        this.rango_desde = desde;
+    }
+    
+    public int getRangoHasta(){
+        return this.rango_hasta;
+    }
+    
+    public void setRangoHasta(int hasta){
+        this.rango_hasta = hasta;
     }
 }

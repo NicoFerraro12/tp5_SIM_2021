@@ -7,8 +7,13 @@ import java.util.ArrayList;
  * @author Nico Ferraro
  */
 public class ColaEspera {
-    private ArrayList<Cliente> cola = new ArrayList<Cliente>();
+    private ArrayList<Cliente> cola;
+ 
     
+    public ColaEspera()
+    {
+        this.cola = new ArrayList<Cliente>();
+    }
     
     public Cliente obtenerProximo()
     {
@@ -36,8 +41,7 @@ public class ColaEspera {
             return false;
         }
     }
-    
-  
+   
     public void reducirCola()
     {
         try
