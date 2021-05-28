@@ -19,7 +19,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     Configuracion config = Configuracion.getConfiguracion();
     DefaultTableModel dtmProbAtencion;
     DefaultTableModel dtmProbPostAtencion;
-    private final DecimalFormat formato = new DecimalFormat("0.00");
+    private final DecimalFormat formato = new DecimalFormat("0.0000");
     private Empleado empleado1 = new Empleado(config);
     private Empleado empleado2 = new Empleado(config);
     private ColaEspera cola = new ColaEspera(config);
@@ -31,8 +31,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private double acumuladorTiempoAtendido = 0;
     private int contadorClientes = 1;
     private DefaultTableModel tabla;
-    private final Object[] linea = new Object[18];
-    private final Object[] Columnas = {"Id", "Evento","Cliente nº", "Reloj", "Proxima Llegada", "Estado Emp1", "RND","Tipo Atencion", "Duracion Atencion", "Fin Atencion", "Estado Emp2", "RND","tipo Atencion", "Duracion Atencion", "Fin Atencion", "Cola", "Cantidad Personas atendidas","Tiempo de permanencia en la biblioteca acumulado"};
+    private final Object[] linea = new Object[20];
+    private final Object[] Columnas = {"Id", "Evento","Cliente nº", "Reloj", "Proxima Llegada", "Estado Emp1", "RND TA" ,"Tipo Atencion","RND Duracion Atencion", "Duracion Atencion", "Fin Atencion", "Estado Emp2", "RND TA","tipo Atencion","RND Duracion Atencion", "Duracion Atencion", "Fin Atencion", "Cola", "Cantidad Personas atendidas","Tiempo de permanencia en la biblioteca acumulado"};
 
     
     public VentanaPrincipal(Controller controlador) {
@@ -116,6 +116,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     {
         evento = "Fin Atencion";
         reloj = r;
+        double auxiliar = 0;
         int auxNroCliente = e.getNroClienteAtendido();
         
 
@@ -132,8 +133,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         if(e.getFlagYaLeyoClienteAtendido() == false)
         {
           acumuladorPersonasAtendidas++;
-          acumuladorTiempoAtendido += (reloj - e.getHoraClienteAtendido());
-          
+          auxiliar = r - e.getHoraClienteAtendido();
+          acumuladorTiempoAtendido += auxiliar;
         }
         cargarLinea(auxNroCliente, cargarLinea, index);
         
@@ -206,18 +207,20 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         linea[3] = formato.format(reloj);
         linea[4] = proximaLlegada;
         linea[5] = empleado1.getEstado();
-        linea[6] = formato.format(empleado1.getRnd());
+        linea[6] = formato.format(empleado1.getRNDClienteAtendido());
         linea[7] = empleado1.getTipoAtencion();
-        linea[8] = formato.format(empleado1.getDuracionAtencion());
-        linea[9] = formato.format(empleado1.getFinAtencion());
-        linea[10] = empleado2.getEstado();
-        linea[11] = formato.format(empleado2.getRnd());
-        linea[12] = empleado2.getTipoAtencion();
-        linea[13] = formato.format(empleado2.getDuracionAtencion());
-        linea[14] = formato.format(empleado2.getFinAtencion());
-        linea[15] = cola.getLargoCola();
-        linea[16] = acumuladorPersonasAtendidas;
-        linea[17] = formato.format(acumuladorTiempoAtendido);      
+        linea[8] = formato.format(empleado1.getRnd());
+        linea[9] = formato.format(empleado1.getDuracionAtencion());
+        linea[10] = formato.format(empleado1.getFinAtencion());
+        linea[11] = empleado2.getEstado();
+        linea[12] = formato.format(empleado2.getRNDClienteAtendido());
+        linea[13] = empleado2.getTipoAtencion();
+        linea[14] = formato.format(empleado2.getRnd());
+        linea[15] = formato.format(empleado2.getDuracionAtencion());
+        linea[16] = formato.format(empleado2.getFinAtencion());
+        linea[17] = cola.getLargoCola();
+        linea[18] = acumuladorPersonasAtendidas;
+        linea[19] = formato.format(acumuladorTiempoAtendido);      
         if(cargarLinea)
         {
             tabla.addRow(linea);
@@ -227,7 +230,23 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     
     private void cambiarColoresColumnas()
     {
-        for(int i=4;i<=8;i++)
+        tablaSimulacion.getColumnModel().getColumn(3).setCellRenderer(
+            new DefaultTableCellRenderer() {
+                
+            @Override
+            public Component getTableCellRendererComponent(JTable table, 
+                                                           Object value, 
+                                                           boolean isSelected, 
+                                                           boolean hasFocus, 
+                                                           int row, 
+                                                           int column) {
+                setText(value.toString());
+                setBackground(isSelected ? Color.GRAY : Color.ORANGE);
+                return this;
+            }
+        });
+        
+        for(int i=5;i<=10;i++)
         {
             tablaSimulacion.getColumnModel().getColumn(i).setCellRenderer(
             new DefaultTableCellRenderer() {
@@ -245,7 +264,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
         }
-        for(int i=9;i<=13;i++)
+        for(int i=11;i<=16;i++)
         {
             tablaSimulacion.getColumnModel().getColumn(i).setCellRenderer(
             new DefaultTableCellRenderer() {
@@ -308,6 +327,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jScrollPaneSimulacion = new javax.swing.JScrollPane();
         tablaSimulacion = new javax.swing.JTable();
         jPanelResultados = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        textAreaClientes = new javax.swing.JTextArea();
         lblResultado = new javax.swing.JLabel();
 
         gpb_consultas.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Configuracion inicial", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
@@ -452,8 +473,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jTableProbPostAtencion.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Se retira", null, null},
-                {"Se queda", null, null}
+                {"Se queda", null, null},
+                {"Se retira", null, null}
             },
             new String [] {
                 "Post Atencion", "Probabilidad", "Probabilidad Acumulada"
@@ -557,7 +578,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         .addComponent(jPanelParametros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(50, 50, 50)
                         .addComponent(gpb_consultas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelConfiguracionLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_resetSim, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -603,18 +624,26 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Simulacion", jScrollPaneSimulacion);
 
+        textAreaClientes.setEditable(false);
+        textAreaClientes.setColumns(20);
+        textAreaClientes.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        textAreaClientes.setRows(5);
+        jScrollPane3.setViewportView(textAreaClientes);
+
         javax.swing.GroupLayout jPanelResultadosLayout = new javax.swing.GroupLayout(jPanelResultados);
         jPanelResultados.setLayout(jPanelResultadosLayout);
         jPanelResultadosLayout.setHorizontalGroup(
             jPanelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 874, Short.MAX_VALUE)
         );
         jPanelResultadosLayout.setVerticalGroup(
             jPanelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanelResultadosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Resultados", jPanelResultados);
+        jTabbedPane1.addTab("Clientes", jPanelResultados);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -649,24 +678,27 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_resetSimActionPerformed
 
     private void btn_simularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simularActionPerformed
-        config.setPromedioPermanencia(Integer.parseInt(txt_promPermanencia.getText()));
-        config.setLlegadaCliente(Integer.parseInt(txt_llegada_cliente.getText()));
-        config.setCantidadSimulacion(Integer.parseInt(txt_cantidad_sim.getText()));
-        config.setConsultaDesde(Integer.parseInt(txt_consulta_desde.getText()));
-        config.setConsultaHasta(Integer.parseInt(txt_consulta_hasta.getText()));
-        config.setTiempoSimulacion(Double.parseDouble(txt_tiempo_sim.getText()));
-        config.setRangoDesde(Integer.parseInt(txt_reloj_desde.getText()));
-        config.setRangoHasta(Integer.parseInt(txt_cant_filas.getText()));
-        /*config.setProbPedirLibro(Float.parseFloat(dtmProbAtencion.getValueAt(0, 1).toString()));
-        config.setProbPedirLibroAcum(Float.parseFloat(dtmProbAtencion.getValueAt(0, 2).toString()));
-        config.setProbDevolverLibro(Float.parseFloat(formato.format(dtmProbAtencion.getValueAt(1, 1))));
-        config.setProbDevolverLibroAcum(Float.parseFloat(dtmProbAtencion.getValueAt(1, 2).toString()));
-        config.setProbConsultar(Float.parseFloat(dtmProbAtencion.getValueAt(2, 1).toString()));
-        config.setProbConsultarAcum(Float.parseFloat(dtmProbAtencion.getValueAt(2, 2).toString()));
-        config.setPrestamoQuedar(Float.parseFloat(dtmProbPostAtencion.getValueAt(0, 1).toString()));
-        config.setPrestamoQuedarAcum(Float.parseFloat(dtmProbPostAtencion.getValueAt(0, 1).toString()));
-        config.setPrestamoRetira(Float.parseFloat(dtmProbPostAtencion.getValueAt(0, 1).toString()));
-        config.setPrestamoRetiraAcum(Float.parseFloat(dtmProbPostAtencion.getValueAt(0, 1).toString()));*/
+        dtmProbAtencion = (DefaultTableModel) jTableProbConsulta.getModel();
+        dtmProbPostAtencion = (DefaultTableModel) jTableProbPostAtencion.getModel();
+        
+        config.setPromedioPermanencia(Integer.parseInt(String.valueOf(txt_promPermanencia.getText())));
+        config.setLlegadaCliente(Integer.parseInt(String.valueOf(txt_llegada_cliente.getText())));
+        config.setCantidadSimulacion(Integer.parseInt(String.valueOf(txt_cantidad_sim.getText())));
+        config.setConsultaDesde(Integer.parseInt(String.valueOf(txt_consulta_desde.getText())));
+        config.setConsultaHasta(Integer.parseInt(String.valueOf(txt_consulta_hasta.getText())));
+        config.setTiempoSimulacion(Double.parseDouble(String.valueOf(txt_tiempo_sim.getText())));
+        config.setRangoDesde(Integer.parseInt(String.valueOf(txt_reloj_desde.getText())));
+        config.setRangoHasta(Integer.parseInt(String.valueOf(txt_cant_filas.getText())));
+        config.setProbPedirLibro(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(0, 1))));
+        config.setProbPedirLibroAcum(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(0, 2))));
+        config.setProbDevolverLibro(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(1, 1))));
+        config.setProbDevolverLibroAcum(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(1, 2))));
+        config.setProbConsultar(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(2, 1))));
+        config.setProbConsultarAcum(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(2, 2))));
+        config.setPrestamoQuedar(Double.parseDouble(String.valueOf(dtmProbPostAtencion.getValueAt(0, 1))));
+        config.setPrestamoQuedarAcum(Double.parseDouble(String.valueOf(dtmProbPostAtencion.getValueAt(0, 2))));
+        config.setPrestamoRetira(Double.parseDouble(String.valueOf(dtmProbPostAtencion.getValueAt(1, 1))));
+        config.setPrestamoRetiraAcum(Double.parseDouble(String.valueOf(dtmProbPostAtencion.getValueAt(1, 2))));
 
         if (txt_tiempo_sim.getText() != null && txt_reloj_desde.getText() != null && txt_promPermanencia.getText() != null
             && txt_llegada_cliente.getText() != null && txt_consulta_hasta.getText() != null
@@ -683,6 +715,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             int contadorLineas = 0;
             acumuladorPersonasAtendidas = 0;
             acumuladorTiempoAtendido = 0;
+            StringBuilder SB= new StringBuilder("");
+            
 
             if(config.getRangoDesde() == 0)
             {
@@ -691,7 +725,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
             primeraLinea(cargarLinea);
 
-            System.out.println("evento: " + evento + " Reloj:" + reloj +" -> " +ListaClientes.toString());
+            /*System.out.println(linea[0] + " " + evento + " Reloj:" + formato.format(reloj) +" -> " +ListaClientes.toString());
+            System.out.println("-----------------------------------------------------");*/
+            SB.append("\n");
+            SB.append(linea[0] + " || " + evento + "|| Reloj: " + formato.format(reloj));
+            SB.append("\n");
+            SB.append("----------------------------------------------------------------------------------------------------------------------------------------------");
+
+
 
             for (int i = 0; i < config.getCantidadSimulacion(); i++)
             {
@@ -710,9 +751,16 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         cargarLinea = true;
                     }
                     siguienteEvento(cargarLinea, i+1);
-                    System.out.println("evento: " + evento + " Reloj:" + reloj +" -> " +ListaClientes.toString());
+                    //System.out.println(linea[0] + " " + evento + " Reloj:" + formato.format(reloj) +" -> " +ListaClientes.toString());
+                    //System.out.println("-----------------------------------------------------");
+                    SB.append("\n");
+                    SB.append(linea[0] + " || " + evento +" "+linea[2] +" || Reloj: " + formato.format(reloj) +" -> " +ListaClientes.toString());
+                    SB.append("\n");
+                    SB.append("----------------------------------------------------------------------------------------------------------------------------------------------");
+
                 }
             }
+            textAreaClientes.setText(SB.toString());
 
             tablaSimulacion.setModel(tabla);
             cambiarColoresColumnas();
@@ -725,6 +773,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_simularActionPerformed
 
     private void btn_configuracionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_configuracionActionPerformed
+        
+        limpiarSimulacion();
+        config = new Configuracion();
         txt_promPermanencia.setText("" + config.getPromedioPermanencia());
         txt_tiempo_sim.setText("" + config.getTiempoSimulacion());
         txt_cantidad_sim.setText("" + config.getCantidadSimulacion());
@@ -733,16 +784,16 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         txt_llegada_cliente.setText("" + config.getLlegadaCliente());
         txt_reloj_desde.setText("" + config.getRangoDesde());
         txt_cant_filas.setText("" + config.getRangoHasta());
-        jTableProbConsulta.setValueAt(formato.format(0.45), 0, 1);
-        jTableProbConsulta.setValueAt(formato.format(0.45), 0, 2);
-        jTableProbConsulta.setValueAt(formato.format(0.45), 1, 1);
-        jTableProbConsulta.setValueAt(formato.format(0.90), 1, 2);
-        jTableProbConsulta.setValueAt(formato.format(0.10), 2, 1);
-        jTableProbConsulta.setValueAt(formato.format(1.00), 2, 2);
-        jTableProbPostAtencion.setValueAt(formato.format(0.60), 0, 1);
-        jTableProbPostAtencion.setValueAt(formato.format(0.60), 0, 2);
-        jTableProbPostAtencion.setValueAt(formato.format(0.40), 1, 1);
-        jTableProbPostAtencion.setValueAt(formato.format(1.00), 1, 2);
+        jTableProbConsulta.setValueAt(0.45, 0, 1);
+        jTableProbConsulta.setValueAt(0.45, 0, 2);
+        jTableProbConsulta.setValueAt(0.45, 1, 1);
+        jTableProbConsulta.setValueAt(0.90, 1, 2);
+        jTableProbConsulta.setValueAt(0.10, 2, 1);
+        jTableProbConsulta.setValueAt(1.00, 2, 2);
+        jTableProbPostAtencion.setValueAt(0.40, 0, 1);
+        jTableProbPostAtencion.setValueAt(0.40, 0, 2);
+        jTableProbPostAtencion.setValueAt(0.60, 1, 1);
+        jTableProbPostAtencion.setValueAt(1.00, 1, 2);
     }//GEN-LAST:event_btn_configuracionActionPerformed
 
     private void txt_promPermanenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_promPermanenciaActionPerformed
@@ -793,12 +844,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelResultados;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPaneSimulacion;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTableProbConsulta;
     private javax.swing.JTable jTableProbPostAtencion;
     private javax.swing.JLabel lblResultado;
     private javax.swing.JTable tablaSimulacion;
+    private javax.swing.JTextArea textAreaClientes;
     private javax.swing.JTextField txt_cant_filas;
     private javax.swing.JTextField txt_cantidad_sim;
     private javax.swing.JTextField txt_consulta_desde;
