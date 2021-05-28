@@ -8,17 +8,17 @@ public class Calculator {
 
     private static final Random rnd = new Random();
 
-    public static double calcular_uniforme(double a, double b) {
-        return a + (rnd.nextDouble() * (b - a));
+    public static double calcular_uniforme(double random, double a, double b) {
+        return a + (random * (b - a));
     }
 
     public static double calcular_uniforme() {
         return rnd.nextDouble();
     }
 
-    public static double calcular_normal(double media, double desviacion) {
+    public static double calcular_normal(double random, double media, double desviacion) {
 
-        double raiz = sqrt((-2) * log(rnd.nextDouble()));
+        double raiz = sqrt((-2) * log(random));
 
         double segundo_miembro = cos(2 * PI * rnd.nextDouble());
 
@@ -28,8 +28,10 @@ public class Calculator {
 
     }
 
-    public static double calcular_exponencial(double lambda) {
-        return (1 / lambda) * Math.log(1 - rnd.nextDouble());
+    public static double calcular_exponencial(double random, double lambda) {
+        
+        return - (1 / lambda) * Math.log(1 - random);
+       
     }
 
 }
