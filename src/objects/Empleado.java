@@ -30,8 +30,8 @@ public class Empleado {
     {
         Calculator calculadora = new Calculator();
         clienteAtendido = c;
-        rnd = c.getRndTipoAtencion();
-        //rnd = Math.random();
+        //rnd = c.getRndTipoAtencion();
+        rnd = Math.random();
         
         if (clienteAtendido.getTipoAtencion() == "Pedir Libro")
         {
@@ -52,10 +52,7 @@ public class Empleado {
                 c.setEstado("Atendido");
                 duracionAtencion = calculadora.calcular_normal(rnd, 2, 0.5);
                 finAtencion = reloj + duracionAtencion;
-                /*if(c.getYaLeyo() == true)
-                {
-                    c.setNroCliente(0);
-                }*/
+
             }
             else
             {
@@ -64,7 +61,7 @@ public class Empleado {
                     tipoAtencion = "Consulta";
                     estado = "Ocupado";
                     c.setEstado("Atendido");
-                    duracionAtencion = calculadora.calcular_uniforme(rnd, 2,5);
+                    duracionAtencion = calculadora.calcular_uniforme(rnd, configuracion.getConsultaDesde(),configuracion.getConsultaHasta());
                     finAtencion = reloj + duracionAtencion;
                 }
                 else
@@ -82,15 +79,17 @@ public class Empleado {
         if(tipoAtencion == "Pedir Libro")
         {
             clienteAtendido.PostAtencion(reloj);
+
         }
         else
         {
             clienteAtendido.setEstado("Finalizado");
             clienteAtendido.setPostAtencion("Retirarse");
             clienteAtendido.setNroCliente(0);
-            horaClienteAtendido = clienteAtendido.getHoraLlegada();
         }
         
+        
+        horaClienteAtendido = clienteAtendido.getHoraLlegada();
         estado = "Libre";
         tipoAtencion = "";
         rnd = 0;
@@ -105,10 +104,12 @@ public class Empleado {
         if(tipoAtencion == "Pedir Libro")
         {
             clienteAtendido.PostAtencion(reloj);
+            horaClienteAtendido = clienteAtendido.getHoraLlegada();
         }
         clienteAtendido.setNroCliente(0);
         clienteAtendido.setPostAtencion("Retirarse");
-        horaClienteAtendido = c.getHoraLlegada();
+        clienteAtendido.setEstado("Finalizado");
+        horaClienteAtendido = clienteAtendido.getHoraLlegada();
         
         realizarAtencion(c, reloj);
         
@@ -160,6 +161,11 @@ public class Empleado {
     public int getNroClienteAtendido()
     {
         return clienteAtendido.getNroCliente();
+    }
+    
+    public double getRNDClienteAtendido()
+    {
+        return clienteAtendido.getRndTipoAtencion();
     }
     
     public boolean getFlagYaLeyoClienteAtendido()

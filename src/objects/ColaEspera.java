@@ -1,6 +1,8 @@
 package objects;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import static jdk.nashorn.internal.objects.NativeString.toUpperCase;
 import model.Configuracion;
 
 /**
@@ -11,6 +13,7 @@ public class ColaEspera {
 
     private ArrayList<Cliente> cola;
     private Configuracion config = Configuracion.getConfiguracion();
+    private final DecimalFormat formato = new DecimalFormat("0.00");
 
     public ColaEspera(Configuracion config) {
         this.cola = new ArrayList<Cliente>();
@@ -74,7 +77,13 @@ public class ColaEspera {
         String linea = "";
         for (int i = 0; i < cola.size(); i++) {
             if (cola.get(i).getNroCliente() != 0) {
-                linea = linea + " || Cliente nº:" + cola.get(i).getNroCliente() + ", Estado:" + cola.get(i).getEstado() + ", Fin Lectura:" + cola.get(i).getFinLectura();
+                linea = linea + " || Cliente nº: " + cola.get(i).getNroCliente() + ", Estado: " + toUpperCase(cola.get(i).getEstado());
+                        if(cola.get(i).getRndPost() != 0)
+                        {
+                            linea = linea + ", PostA: " + toUpperCase(cola.get(i).getPostAtencion()) + ", RND: " + formato.format(cola.get(i).getRndPost());
+                        }
+                
+                
 
             }
         }

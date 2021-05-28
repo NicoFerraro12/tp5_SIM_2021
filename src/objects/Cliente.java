@@ -43,6 +43,7 @@ public class Cliente {
             yaLeyo = true;
             finLectura = configuracion.getPromedioPermanencia() + reloj;
             postAtencion = "Lectura";
+            estado = "Leyendo";
             
         }
         else
