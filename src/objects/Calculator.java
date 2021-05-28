@@ -29,9 +29,9 @@ public class Calculator {
     }
 
     public static double calcular_exponencial(double random, double lambda) {
-        
-        return - (1 / lambda) * Math.log(1 - random);
-       
+
+        return -(1 / lambda) * Math.log(1 - random);
+
     }
 
 }

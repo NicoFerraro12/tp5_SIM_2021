@@ -7,6 +7,7 @@ import model.Configuracion;
  * @author Nico Ferraro
  */
 public class Cliente {
+
     private int nroCliente;
     private String estado;
     private String tipoAtencion;
@@ -17,9 +18,8 @@ public class Cliente {
     private Boolean yaLeyo = false;
     private double horaLlegada = 0;
     private Configuracion configuracion = Configuracion.getConfiguracion();
-    
-    
-    public Cliente(int nroc, double hora, Configuracion config){
+
+    public Cliente(int nroc, double hora, Configuracion config) {
         this.nroCliente = nroc;
         this.estado = "Atendido";
         this.tipoAtencion = "";
@@ -32,56 +32,40 @@ public class Cliente {
         configuracion = config;
         TipoAtencion();
     }
-    
-    public void PostAtencion(double reloj)
-    {
-    
-               
+
+    public void PostAtencion(double reloj) {
+
         rndPostAtencion = Math.random();
-        if (rndPostAtencion <= configuracion.getPrestamoQuedarAcum())
-        { 
+        if (rndPostAtencion <= configuracion.getPrestamoQuedarAcum()) {
             yaLeyo = true;
             finLectura = configuracion.getPromedioPermanencia() + reloj;
             postAtencion = "Lectura";
             estado = "Leyendo";
-            
-        }
-        else
-        {
+
+        } else {
             nroCliente = 0;
             estado = "Finalizado";
             postAtencion = "Retirarse";
         }
-        
+
     }
-    
-    
-    private void TipoAtencion()
-    {
+
+    private void TipoAtencion() {
         rndTipoAtencion = Math.random();
-        
-        if (rndTipoAtencion < configuracion.getProbPedirLibroAcum())
-        {
+
+        if (rndTipoAtencion < configuracion.getProbPedirLibroAcum()) {
             tipoAtencion = "Pedir Libro";
-            
-                                   
-        }
-        else
-        {
-            if(rndTipoAtencion < configuracion.getProbDevolverLibroAcum())
-            {
+
+        } else {
+            if (rndTipoAtencion < configuracion.getProbDevolverLibroAcum()) {
                 tipoAtencion = "Devolver Libro";
-                
-            }
-            else
-            {
-                if(rndTipoAtencion <= configuracion.getProbConsultarAcum())// en el caso que salga el 1 por eso <=
+
+            } else {
+                if (rndTipoAtencion <= configuracion.getProbConsultarAcum())// en el caso que salga el 1 por eso <=
                 {
                     tipoAtencion = "Consulta";
-                    
-                }
-                else
-                {
+
+                } else {
                     System.out.println("error calculando la atencion");
                 }
             }
@@ -91,53 +75,52 @@ public class Cliente {
     public Boolean getYaLeyo() {
         return yaLeyo;
     }
-        
-  
-    public int getNroCliente(){
+
+    public int getNroCliente() {
         return this.nroCliente;
     }
-    
-    public void setNroCliente(int cliente){
+
+    public void setNroCliente(int cliente) {
         this.nroCliente = cliente;
     }
-    
-    public String getEstado(){
+
+    public String getEstado() {
         return this.estado;
     }
-    
-    public void setEstado(String estado){
+
+    public void setEstado(String estado) {
         this.estado = estado;
     }
-    
-    public String getTipoAtencion(){
+
+    public String getTipoAtencion() {
         return this.tipoAtencion;
     }
-    
-    public void setTipoAtencion(String tipoAtencion){
+
+    public void setTipoAtencion(String tipoAtencion) {
         this.tipoAtencion = tipoAtencion;
     }
-    
-    public double getRndPost(){
+
+    public double getRndPost() {
         return this.rndPostAtencion;
     }
-    
-    public void setRndPost(double rndPostAtencion){
+
+    public void setRndPost(double rndPostAtencion) {
         this.rndPostAtencion = rndPostAtencion;
     }
-    
-    public String getPostAtencion(){
+
+    public String getPostAtencion() {
         return this.postAtencion;
     }
-    
-    public void setPostAtencion(String postAtencion){
+
+    public void setPostAtencion(String postAtencion) {
         this.postAtencion = postAtencion;
     }
-    
-    public double getFinLectura(){
+
+    public double getFinLectura() {
         return this.finLectura;
     }
-    
-    public void setFinLectura(double finLectura){
+
+    public void setFinLectura(double finLectura) {
         this.finLectura = finLectura;
     }
 

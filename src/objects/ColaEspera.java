@@ -53,7 +53,7 @@ public class ColaEspera {
 
     public Cliente finalizacionLectura() {
         double minimo = 0;
-        Cliente aux = new Cliente(0,0, config);
+        Cliente aux = new Cliente(0, 0, config);
 
         for (int i = 0; i < cola.size(); i++) {
             if (cola.get(i).getNroCliente() != 0 && cola.get(i).getFinLectura() != 0) {
@@ -78,12 +78,9 @@ public class ColaEspera {
         for (int i = 0; i < cola.size(); i++) {
             if (cola.get(i).getNroCliente() != 0) {
                 linea = linea + " || Cliente nº: " + cola.get(i).getNroCliente() + ", Estado: " + toUpperCase(cola.get(i).getEstado());
-                        if(cola.get(i).getRndPost() != 0)
-                        {
-                            linea = linea + ", PostA: " + toUpperCase(cola.get(i).getPostAtencion()) + ", RND: " + formato.format(cola.get(i).getRndPost());
-                        }
-                
-                
+                if (cola.get(i).getRndPost() != 0) {
+                    linea = linea + ", PostA: " + toUpperCase(cola.get(i).getPostAtencion()) + ", RND: " + formato.format(cola.get(i).getRndPost());
+                }
 
             }
         }
