@@ -41,6 +41,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         this.setTitle("Simulación por Colas - Ejercicio N°5: Biblioteca");
         dtmProbAtencion = (DefaultTableModel) jTableProbConsulta.getModel();
         dtmProbPostAtencion = (DefaultTableModel) jTableProbPostAtencion.getModel();
+        txt_resultado.setEditable(false);
     }
 
     public void primeraLinea(boolean cargarLinea) {
@@ -273,15 +274,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jTableProbPostAtencion = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableProbConsulta = new javax.swing.JTable();
-        btn_configuracion = new javax.swing.JButton();
-        btn_simular = new javax.swing.JButton();
-        btn_resetSim = new javax.swing.JButton();
         jScrollPaneSimulacion = new javax.swing.JScrollPane();
         tablaSimulacion = new javax.swing.JTable();
         jPanelResultados = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         textAreaClientes = new javax.swing.JTextArea();
         lblResultado = new javax.swing.JLabel();
+        btn_resetSim = new javax.swing.JButton();
+        btn_configuracion = new javax.swing.JButton();
+        btn_simular = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        txt_resultado = new javax.swing.JTextField();
 
         gpb_consultas.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Configuracion inicial", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP));
         gpb_consultas.setBorder(javax.swing.BorderFactory.createTitledBorder("Distribucion Consultas"));
@@ -497,27 +500,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGap(50, 50, 50))
         );
 
-        btn_configuracion.setText("Setear configuracion por defecto");
-        btn_configuracion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_configuracionActionPerformed(evt);
-            }
-        });
-
-        btn_simular.setText("Simular");
-        btn_simular.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_simularActionPerformed(evt);
-            }
-        });
-
-        btn_resetSim.setText("Limpiar Parametros");
-        btn_resetSim.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_resetSimActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanelConfiguracionLayout = new javax.swing.GroupLayout(jPanelConfiguracion);
         jPanelConfiguracion.setLayout(jPanelConfiguracionLayout);
         jPanelConfiguracionLayout.setHorizontalGroup(
@@ -531,33 +513,18 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         .addGap(50, 50, 50)
                         .addComponent(gpb_consultas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelConfiguracionLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_resetSim, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(btn_configuracion)
-                .addGap(20, 20, 20)
-                .addComponent(btn_simular, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(80, 80, 80))
         );
         jPanelConfiguracionLayout.setVerticalGroup(
             jPanelConfiguracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelConfiguracionLayout.createSequentialGroup()
                 .addGap(44, 44, 44)
                 .addComponent(jPanelProb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanelConfiguracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_resetSim)
-                    .addComponent(btn_simular)
-                    .addComponent(btn_configuracion))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(50, 50, 50)
                 .addGroup(jPanelConfiguracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(gpb_consultas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanelParametros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
-
-        btn_configuracion.getAccessibleContext().setAccessibleName("Setear configuración por defecto");
 
         jTabbedPane1.addTab("Configuracion", jPanelConfiguracion);
 
@@ -586,7 +553,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jPanelResultados.setLayout(jPanelResultadosLayout);
         jPanelResultadosLayout.setHorizontalGroup(
             jPanelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 874, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1294, Short.MAX_VALUE)
         );
         jPanelResultadosLayout.setVerticalGroup(
             jPanelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -597,6 +564,29 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Clientes", jPanelResultados);
 
+        btn_resetSim.setText("Limpiar Parametros");
+        btn_resetSim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_resetSimActionPerformed(evt);
+            }
+        });
+
+        btn_configuracion.setText("Setear configuracion por defecto");
+        btn_configuracion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_configuracionActionPerformed(evt);
+            }
+        });
+
+        btn_simular.setText("Simular");
+        btn_simular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_simularActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Promedio de permanencia de clientes:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -604,13 +594,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(lblResultado)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTabbedPane1)
-                        .addContainerGap())))
+                        .addGap(100, 100, 100)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblResultado)
+                                .addGap(245, 245, 245))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(20, 20, 20)
+                                .addComponent(txt_resultado, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(150, 150, 150)))
+                        .addComponent(btn_resetSim, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btn_configuracion)
+                        .addGap(18, 18, 18)
+                        .addComponent(btn_simular, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -618,22 +619,43 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 803, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_resetSim)
+                    .addComponent(btn_configuracion)
+                    .addComponent(btn_simular)
+                    .addComponent(txt_resultado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblResultado)
-                .addGap(62, 62, 62))
+                .addGap(52, 52, 52))
         );
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("");
+        btn_configuracion.getAccessibleContext().setAccessibleName("Setear configuración por defecto");
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_resetSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetSimActionPerformed
         limpiarSimulacion();
     }//GEN-LAST:event_btn_resetSimActionPerformed
 
-    private void btn_simularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simularActionPerformed
-
+    private boolean validarCampos() {
         if (Integer.parseInt(txt_consulta_desde.getText()) >= Integer.parseInt(txt_consulta_hasta.getText())) {
             JOptionPane.showMessageDialog(null, "El rango desde de distribucion de las consultas no puede ser mayor o igual que el rango hasta.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         } else {
+            if (txt_tiempo_sim.getText().equals("") || txt_reloj_desde.getText().equals("") || txt_promPermanencia.getText().equals("")
+                    || txt_llegada_cliente.getText().equals("") || txt_consulta_hasta.getText().equals("") || txt_consulta_desde.getText().equals("")
+                    || txt_cantidad_sim.getText().equals("") || txt_cant_filas.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Debe completar todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void btn_simularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simularActionPerformed
+
+        if (validarCampos()) {
             dtmProbAtencion = (DefaultTableModel) jTableProbConsulta.getModel();
             dtmProbPostAtencion = (DefaultTableModel) jTableProbPostAtencion.getModel();
 
@@ -656,71 +678,62 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             config.setPrestamoRetira(Double.parseDouble(String.valueOf(dtmProbPostAtencion.getValueAt(1, 1))));
             config.setPrestamoRetiraAcum(Double.parseDouble(String.valueOf(dtmProbPostAtencion.getValueAt(1, 2))));
 
-            if (txt_tiempo_sim.getText().isEmpty() && txt_reloj_desde.getText().isEmpty() && txt_promPermanencia.getText().isEmpty()
-                    && txt_llegada_cliente.getText().isEmpty() && txt_consulta_hasta.getText().isEmpty()
-                    && txt_consulta_desde.getText().isEmpty() && txt_cantidad_sim.getText().isEmpty()
-                    && txt_cant_filas.getText().isEmpty()) {
-                empleado1 = new Empleado(config);
-                empleado2 = new Empleado(config);
-                cola = new ColaEspera(config);
-                ListaClientes = new ColaEspera(config);
-                tabla = new DefaultTableModel();
-                tabla.setColumnIdentifiers(Columnas);
-                boolean cargarLinea = false;
-                contadorClientes = 1;
-                int contadorLineas = 0;
-                acumuladorPersonasAtendidas = 0;
-                acumuladorTiempoAtendido = 0;
-                StringBuilder SB = new StringBuilder("");
+            empleado1 = new Empleado(config);
+            empleado2 = new Empleado(config);
+            cola = new ColaEspera(config);
+            ListaClientes = new ColaEspera(config);
+            tabla = new DefaultTableModel();
+            tabla.setColumnIdentifiers(Columnas);
+            boolean cargarLinea = false;
+            contadorClientes = 1;
+            int contadorLineas = 0;
+            acumuladorPersonasAtendidas = 0;
+            acumuladorTiempoAtendido = 0;
+            StringBuilder SB = new StringBuilder("");
 
-                if (config.getRangoDesde() == 0) {
-                    cargarLinea = true;
-                    contadorLineas++;
-                }
-                primeraLinea(cargarLinea);
-
-                /*System.out.println(linea[0] + " " + evento + " Reloj:" + formato.format(reloj) +" -> " +ListaClientes.toString());
-                 System.out.println("-----------------------------------------------------");*/
-                SB.append("\n");
-                SB.append(linea[0] + " || " + evento + "|| Reloj: " + formato.format(reloj));
-                SB.append("\n");
-                SB.append("----------------------------------------------------------------------------------------------------------------------------------------------");
-
-                for (int i = 0; i < config.getCantidadSimulacion(); i++) {
-                    if (0 <= reloj && reloj <= config.getTiempoSimulacion()) {
-                        if (reloj >= config.getRangoDesde() && contadorLineas < config.getRangoHasta()) {
-                            cargarLinea = true;
-                            contadorLineas++;
-                        } else {
-                            cargarLinea = false;
-                        }
-                        if (i == config.getCantidadSimulacion() - 1) {
-                            cargarLinea = true;
-                        }
-                        siguienteEvento(cargarLinea, i + 1);
-                    //System.out.println(linea[0] + " " + evento + " Reloj:" + formato.format(reloj) +" -> " +ListaClientes.toString());
-                        //System.out.println("-----------------------------------------------------");
-                        SB.append("\n");
-                        SB.append(linea[0] + " || " + evento + " " + linea[2] + " || Reloj: " + formato.format(reloj) + " -> " + ListaClientes.toString());
-                        SB.append("\n");
-                        SB.append("----------------------------------------------------------------------------------------------------------------------------------------------");
-
-                    }
-                }
-                textAreaClientes.setText(SB.toString());
-
-                tablaSimulacion.setModel(tabla);
-                cambiarColoresColumnas();
-                lblResultado.setText("Promedio de permanencia de los clientes:" + acumuladorTiempoAtendido / acumuladorPersonasAtendidas);
-                SwingUtilities.invokeLater(() -> {
-                    jTabbedPane1.setSelectedIndex(1);
-                });
-            } else {
-                JOptionPane.showMessageDialog(null, "Complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+            if (config.getRangoDesde() == 0) {
+                cargarLinea = true;
+                contadorLineas++;
             }
+            primeraLinea(cargarLinea);
+
+            /*System.out.println(linea[0] + " " + evento + " Reloj:" + formato.format(reloj) +" -> " +ListaClientes.toString());
+             System.out.println("-----------------------------------------------------");*/
+            SB.append("\n");
+            SB.append(linea[0]).append(" || ").append(evento).append("|| Reloj: ").append(formato.format(reloj));
+            SB.append("\n");
+            SB.append("----------------------------------------------------------------------------------------------------------------------------------------------");
+
+            for (int i = 0; i < config.getCantidadSimulacion(); i++) {
+                if (0 <= reloj && reloj <= config.getTiempoSimulacion()) {
+                    if (reloj >= config.getRangoDesde() && contadorLineas < config.getRangoHasta()) {
+                        cargarLinea = true;
+                        contadorLineas++;
+                    } else {
+                        cargarLinea = false;
+                    }
+                    if (i == config.getCantidadSimulacion() - 1) {
+                        cargarLinea = true;
+                    }
+                    siguienteEvento(cargarLinea, i + 1);
+                    //System.out.println(linea[0] + " " + evento + " Reloj:" + formato.format(reloj) +" -> " +ListaClientes.toString());
+                    //System.out.println("-----------------------------------------------------");
+                    SB.append("\n");
+                    SB.append(linea[0]).append(" || ").append(evento).append(" ").append(linea[2]).append(" || Reloj: ").append(formato.format(reloj)).append(" -> ").append(ListaClientes.toString());
+                    SB.append("\n");
+                    SB.append("----------------------------------------------------------------------------------------------------------------------------------------------");
+
+                }
+            }
+            textAreaClientes.setText(SB.toString());
+
+            tablaSimulacion.setModel(tabla);
+            cambiarColoresColumnas();
+            txt_resultado.setText("" + acumuladorTiempoAtendido / acumuladorPersonasAtendidas);
+            SwingUtilities.invokeLater(() -> {
+                jTabbedPane1.setSelectedIndex(1);
+            });
         }
-
-
     }//GEN-LAST:event_btn_simularActionPerformed
 
     private void btn_configuracionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_configuracionActionPerformed
@@ -782,6 +795,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -808,6 +822,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField txt_llegada_cliente;
     private javax.swing.JTextField txt_promPermanencia;
     private javax.swing.JTextField txt_reloj_desde;
+    private javax.swing.JTextField txt_resultado;
     private javax.swing.JTextField txt_tiempo_sim;
     // End of variables declaration//GEN-END:variables
 }
