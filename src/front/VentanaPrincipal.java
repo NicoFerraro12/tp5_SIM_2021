@@ -32,9 +32,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private int contadorClientes = 1;
     private DefaultTableModel tabla;
     private final Object[] linea = new Object[20];
-    private final Object[] Columnas = {"Id", "Evento","Cliente nº", "Reloj", "Proxima Llegada", "Estado Emp1", "RND TA" ,"Tipo Atencion","RND Duracion Atencion", "Duracion Atencion", "Fin Atencion", "Estado Emp2", "RND TA","tipo Atencion","RND Duracion Atencion", "Duracion Atencion", "Fin Atencion", "Cola", "Cantidad Personas atendidas","Tiempo de permanencia en la biblioteca acumulado"};
+    private final Object[] Columnas = {"Id", "Evento", "Cliente nº", "Reloj", "Proxima Llegada", "Estado Emp1", "RND TA", "Tipo Atencion", "RND Duracion Atencion", "Duracion Atencion", "Fin Atencion", "Estado Emp2", "RND TA", "tipo Atencion", "RND Duracion Atencion", "Duracion Atencion", "Fin Atencion", "Cola", "Cantidad Personas atendidas", "Tiempo de permanencia en la biblioteca acumulado"};
 
-    
     public VentanaPrincipal(Controller controlador) {
         this.controlador = controlador;
         initComponents();
@@ -43,23 +42,21 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         dtmProbAtencion = (DefaultTableModel) jTableProbConsulta.getModel();
         dtmProbPostAtencion = (DefaultTableModel) jTableProbPostAtencion.getModel();
     }
-    
-    public void primeraLinea(boolean cargarLinea)
-    {
+
+    public void primeraLinea(boolean cargarLinea) {
         reloj = 0;
         evento = "Inicio";
         proximaLlegada = config.getLlegadaCliente();
         cargarLinea(0, cargarLinea, 0);
-        
+
     }
-    
-    private void siguienteEvento(boolean cargarLinea, int index)
-    {
+
+    private void siguienteEvento(boolean cargarLinea, int index) {
         double PL = proximaLlegada;
         double E1 = empleado1.getFinAtencion();
         double E2 = empleado2.getFinAtencion();
         double FL = ListaClientes.finalizacionLectura().getFinLectura();
-        
+
         if (E1 == 0)//el empleado esta libre
         {
             E1 = 9999999;
@@ -72,105 +69,72 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         {
             FL = 9999999;
         }
-        
-        if(PL < E1 && PL < E2 && PL < FL)
-        {
+
+        if (PL < E1 && PL < E2 && PL < FL) {
             llegadaPersona(PL, cargarLinea, index);
-        }
-        else
-        {
-            if(E1 < PL && E1 < E2 && E1 < FL)
-            {
+        } else {
+            if (E1 < PL && E1 < E2 && E1 < FL) {
                 finAtencion(E1, empleado1, cargarLinea, index);
-            }
-            else
-            {
-                if(E2 < PL && E2 < E1 && E2 < FL)
-                {
+            } else {
+                if (E2 < PL && E2 < E1 && E2 < FL) {
                     finAtencion(E2, empleado2, cargarLinea, index);
-                }
-                else
-                {
-                    if(FL < PL && FL < E1 && FL < E2)
-                    {
+                } else {
+                    if (FL < PL && FL < E1 && FL < E2) {
                         finPermanenciaLectura(FL, ListaClientes.finalizacionLectura(), cargarLinea, index);
-                    }
-                    else
-                    {
+                    } else {
                         System.out.println("problema con decidir proximo evento" + " PL:" + PL + " E1:" + E1 + " E2:" + E2 + " FL:" + FL);
-                        
+
                     }
                 }
             }
         }
-        
-        
-        
-       
-        
-        
 
     }
-    
-    public void finAtencion(double r, Empleado e, boolean cargarLinea, int index)
-    {
+
+    public void finAtencion(double r, Empleado e, boolean cargarLinea, int index) {
         evento = "Fin Atencion";
         reloj = r;
-        double auxiliar = 0;
+        double auxiliar;
         int auxNroCliente = e.getNroClienteAtendido();
-        
 
-        if(cola.hayCola() == true)
-        {
+        if (cola.hayCola() == true) {
             e.finalizarAtencionConCola(reloj, cola.obtenerProximo());
             cola.reducirCola();
-            
-        }
-        else
-        {
+
+        } else {
             e.finalizarAtencion(reloj);
         }
-        if(e.getFlagYaLeyoClienteAtendido() == false)
-        {
-          acumuladorPersonasAtendidas++;
-          auxiliar = r - e.getHoraClienteAtendido();
-          acumuladorTiempoAtendido += auxiliar;
+        if (e.getFlagYaLeyoClienteAtendido() == false) {
+            acumuladorPersonasAtendidas++;
+            auxiliar = r - e.getHoraClienteAtendido();
+            acumuladorTiempoAtendido += auxiliar;
         }
         cargarLinea(auxNroCliente, cargarLinea, index);
-        
+
     }
-    
-    public void finPermanenciaLectura(double r, Cliente c, boolean cargarLinea, int index)
-    {
+
+    public void finPermanenciaLectura(double r, Cliente c, boolean cargarLinea, int index) {
         evento = "Fin Lectura";
         reloj = r;
         c.setFinLectura(0);
         c.setTipoAtencion("Devolver Libro");
         c.setYaLeyo(false);
-        if(!empleado1.getEstado().equals("Ocupado"))
-        {
+        if (!empleado1.getEstado().equals("Ocupado")) {
             empleado1.realizarAtencion(c, reloj);
-        }
-        else
-        {
-            if(!empleado2.getEstado().equals("Ocupado"))
-            {
+        } else {
+            if (!empleado2.getEstado().equals("Ocupado")) {
                 empleado2.realizarAtencion(c, reloj);
-            }
-            else
-            {
+            } else {
                 cola.agregarACola(c);
                 c.setEstado("en cola");
             }
-            
+
         }
         cargarLinea(c.getNroCliente(), cargarLinea, index);
-        
 
     }
-    
-    public void llegadaPersona(double r, boolean cargarLinea, int index)
-    {
+
+    public void llegadaPersona(double r, boolean cargarLinea, int index) {
 
         Cliente c = new Cliente(contadorClientes, r, config);
         ListaClientes.agregarACola(c);
@@ -178,29 +142,22 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         evento = "Llegada persona";
         reloj = r;
         proximaLlegada = r + config.getLlegadaCliente();
-        if(!empleado1.getEstado().equals("Ocupado"))
-        {
+        if (!empleado1.getEstado().equals("Ocupado")) {
             empleado1.realizarAtencion(c, reloj);
-        }
-        else
-        {
-            if(!empleado2.getEstado().equals("Ocupado"))
-            {
+        } else {
+            if (!empleado2.getEstado().equals("Ocupado")) {
                 empleado2.realizarAtencion(c, reloj);
-            }
-            else
-            {
+            } else {
                 c.setEstado("en cola");
                 cola.agregarACola(c);
             }
-            
+
         }
         cargarLinea(c.getNroCliente(), cargarLinea, index);
-        
+
     }
-    
-    public void cargarLinea(int nroCliente, boolean cargarLinea, int index)
-    {
+
+    public void cargarLinea(int nroCliente, boolean cargarLinea, int index) {
         linea[0] = index;
         linea[1] = evento;
         linea[2] = nroCliente;
@@ -220,71 +177,66 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         linea[16] = formato.format(empleado2.getFinAtencion());
         linea[17] = cola.getLargoCola();
         linea[18] = acumuladorPersonasAtendidas;
-        linea[19] = formato.format(acumuladorTiempoAtendido);      
-        if(cargarLinea)
-        {
+        linea[19] = formato.format(acumuladorTiempoAtendido);
+        if (cargarLinea) {
             tabla.addRow(linea);
         }
-        
-    }
-    
-    private void cambiarColoresColumnas()
-    {
-        tablaSimulacion.getColumnModel().getColumn(3).setCellRenderer(
-            new DefaultTableCellRenderer() {
-                
-            @Override
-            public Component getTableCellRendererComponent(JTable table, 
-                                                           Object value, 
-                                                           boolean isSelected, 
-                                                           boolean hasFocus, 
-                                                           int row, 
-                                                           int column) {
-                setText(value.toString());
-                setBackground(isSelected ? Color.GRAY : Color.ORANGE);
-                return this;
-            }
-        });
-        
-        for(int i=5;i<=10;i++)
-        {
-            tablaSimulacion.getColumnModel().getColumn(i).setCellRenderer(
-            new DefaultTableCellRenderer() {
-                
-            @Override
-            public Component getTableCellRendererComponent(JTable table, 
-                                                           Object value, 
-                                                           boolean isSelected, 
-                                                           boolean hasFocus, 
-                                                           int row, 
-                                                           int column) {
-                setText(value.toString());
-                setBackground(isSelected ? Color.GRAY : Color.CYAN);
-                return this;
-            }
-        });
-        }
-        for(int i=11;i<=16;i++)
-        {
-            tablaSimulacion.getColumnModel().getColumn(i).setCellRenderer(
-            new DefaultTableCellRenderer() {
-                
-            @Override
-            public Component getTableCellRendererComponent(JTable table, 
-                                                           Object value, 
-                                                           boolean isSelected, 
-                                                           boolean hasFocus, 
-                                                           int row, 
-                                                           int column) {
-                setText(value.toString());
-                setBackground(isSelected ? Color.GRAY : Color.PINK);
-                return this;
-            }
-        });
-        }
-        
+
     }
 
+    private void cambiarColoresColumnas() {
+        tablaSimulacion.getColumnModel().getColumn(3).setCellRenderer(
+                new DefaultTableCellRenderer() {
+
+                    @Override
+                    public Component getTableCellRendererComponent(JTable table,
+                            Object value,
+                            boolean isSelected,
+                            boolean hasFocus,
+                            int row,
+                            int column) {
+                        setText(value.toString());
+                        setBackground(isSelected ? Color.GRAY : Color.ORANGE);
+                        return this;
+                    }
+                });
+
+        for (int i = 5; i <= 10; i++) {
+            tablaSimulacion.getColumnModel().getColumn(i).setCellRenderer(
+                    new DefaultTableCellRenderer() {
+
+                        @Override
+                        public Component getTableCellRendererComponent(JTable table,
+                                Object value,
+                                boolean isSelected,
+                                boolean hasFocus,
+                                int row,
+                                int column) {
+                            setText(value.toString());
+                            setBackground(isSelected ? Color.GRAY : Color.CYAN);
+                            return this;
+                        }
+                    });
+        }
+        for (int i = 11; i <= 16; i++) {
+            tablaSimulacion.getColumnModel().getColumn(i).setCellRenderer(
+                    new DefaultTableCellRenderer() {
+
+                        @Override
+                        public Component getTableCellRendererComponent(JTable table,
+                                Object value,
+                                boolean isSelected,
+                                boolean hasFocus,
+                                int row,
+                                int column) {
+                            setText(value.toString());
+                            setBackground(isSelected ? Color.GRAY : Color.PINK);
+                            return this;
+                        }
+                    });
+        }
+
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -678,102 +630,100 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_resetSimActionPerformed
 
     private void btn_simularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simularActionPerformed
-        dtmProbAtencion = (DefaultTableModel) jTableProbConsulta.getModel();
-        dtmProbPostAtencion = (DefaultTableModel) jTableProbPostAtencion.getModel();
-        
-        config.setPromedioPermanencia(Integer.parseInt(String.valueOf(txt_promPermanencia.getText())));
-        config.setLlegadaCliente(Integer.parseInt(String.valueOf(txt_llegada_cliente.getText())));
-        config.setCantidadSimulacion(Integer.parseInt(String.valueOf(txt_cantidad_sim.getText())));
-        config.setConsultaDesde(Integer.parseInt(String.valueOf(txt_consulta_desde.getText())));
-        config.setConsultaHasta(Integer.parseInt(String.valueOf(txt_consulta_hasta.getText())));
-        config.setTiempoSimulacion(Double.parseDouble(String.valueOf(txt_tiempo_sim.getText())));
-        config.setRangoDesde(Integer.parseInt(String.valueOf(txt_reloj_desde.getText())));
-        config.setRangoHasta(Integer.parseInt(String.valueOf(txt_cant_filas.getText())));
-        config.setProbPedirLibro(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(0, 1))));
-        config.setProbPedirLibroAcum(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(0, 2))));
-        config.setProbDevolverLibro(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(1, 1))));
-        config.setProbDevolverLibroAcum(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(1, 2))));
-        config.setProbConsultar(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(2, 1))));
-        config.setProbConsultarAcum(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(2, 2))));
-        config.setPrestamoQuedar(Double.parseDouble(String.valueOf(dtmProbPostAtencion.getValueAt(0, 1))));
-        config.setPrestamoQuedarAcum(Double.parseDouble(String.valueOf(dtmProbPostAtencion.getValueAt(0, 2))));
-        config.setPrestamoRetira(Double.parseDouble(String.valueOf(dtmProbPostAtencion.getValueAt(1, 1))));
-        config.setPrestamoRetiraAcum(Double.parseDouble(String.valueOf(dtmProbPostAtencion.getValueAt(1, 2))));
 
-        if (txt_tiempo_sim.getText() != null && txt_reloj_desde.getText() != null && txt_promPermanencia.getText() != null
-            && txt_llegada_cliente.getText() != null && txt_consulta_hasta.getText() != null
-            && txt_consulta_desde.getText() != null && txt_cantidad_sim.getText() != null
-            && txt_cant_filas.getText() != null) {
-            empleado1 = new Empleado(config);
-            empleado2 = new Empleado(config);
-            cola = new ColaEspera(config);
-            ListaClientes = new ColaEspera(config);
-            tabla = new DefaultTableModel();
-            tabla.setColumnIdentifiers(Columnas);
-            boolean cargarLinea = false;
-            contadorClientes = 1;
-            int contadorLineas = 0;
-            acumuladorPersonasAtendidas = 0;
-            acumuladorTiempoAtendido = 0;
-            StringBuilder SB= new StringBuilder("");
-            
+        if (Integer.parseInt(txt_consulta_desde.getText()) >= Integer.parseInt(txt_consulta_hasta.getText())) {
+            JOptionPane.showMessageDialog(null, "El rango desde de distribucion de las consultas no puede ser mayor o igual que el rango hasta.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            dtmProbAtencion = (DefaultTableModel) jTableProbConsulta.getModel();
+            dtmProbPostAtencion = (DefaultTableModel) jTableProbPostAtencion.getModel();
 
-            if(config.getRangoDesde() == 0)
-            {
-                cargarLinea = true;
-                contadorLineas++;
-            }
-            primeraLinea(cargarLinea);
+            config.setPromedioPermanencia(Integer.parseInt(String.valueOf(txt_promPermanencia.getText())));
+            config.setLlegadaCliente(Integer.parseInt(String.valueOf(txt_llegada_cliente.getText())));
+            config.setCantidadSimulacion(Integer.parseInt(String.valueOf(txt_cantidad_sim.getText())));
+            config.setConsultaDesde(Integer.parseInt(String.valueOf(txt_consulta_desde.getText())));
+            config.setConsultaHasta(Integer.parseInt(String.valueOf(txt_consulta_hasta.getText())));
+            config.setTiempoSimulacion(Double.parseDouble(String.valueOf(txt_tiempo_sim.getText())));
+            config.setRangoDesde(Integer.parseInt(String.valueOf(txt_reloj_desde.getText())));
+            config.setRangoHasta(Integer.parseInt(String.valueOf(txt_cant_filas.getText())));
+            config.setProbPedirLibro(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(0, 1))));
+            config.setProbPedirLibroAcum(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(0, 2))));
+            config.setProbDevolverLibro(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(1, 1))));
+            config.setProbDevolverLibroAcum(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(1, 2))));
+            config.setProbConsultar(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(2, 1))));
+            config.setProbConsultarAcum(Double.parseDouble(String.valueOf(dtmProbAtencion.getValueAt(2, 2))));
+            config.setPrestamoQuedar(Double.parseDouble(String.valueOf(dtmProbPostAtencion.getValueAt(0, 1))));
+            config.setPrestamoQuedarAcum(Double.parseDouble(String.valueOf(dtmProbPostAtencion.getValueAt(0, 2))));
+            config.setPrestamoRetira(Double.parseDouble(String.valueOf(dtmProbPostAtencion.getValueAt(1, 1))));
+            config.setPrestamoRetiraAcum(Double.parseDouble(String.valueOf(dtmProbPostAtencion.getValueAt(1, 2))));
 
-            /*System.out.println(linea[0] + " " + evento + " Reloj:" + formato.format(reloj) +" -> " +ListaClientes.toString());
-            System.out.println("-----------------------------------------------------");*/
-            SB.append("\n");
-            SB.append(linea[0] + " || " + evento + "|| Reloj: " + formato.format(reloj));
-            SB.append("\n");
-            SB.append("----------------------------------------------------------------------------------------------------------------------------------------------");
+            if (txt_tiempo_sim.getText().isEmpty() && txt_reloj_desde.getText().isEmpty() && txt_promPermanencia.getText().isEmpty()
+                    && txt_llegada_cliente.getText().isEmpty() && txt_consulta_hasta.getText().isEmpty()
+                    && txt_consulta_desde.getText().isEmpty() && txt_cantidad_sim.getText().isEmpty()
+                    && txt_cant_filas.getText().isEmpty()) {
+                empleado1 = new Empleado(config);
+                empleado2 = new Empleado(config);
+                cola = new ColaEspera(config);
+                ListaClientes = new ColaEspera(config);
+                tabla = new DefaultTableModel();
+                tabla.setColumnIdentifiers(Columnas);
+                boolean cargarLinea = false;
+                contadorClientes = 1;
+                int contadorLineas = 0;
+                acumuladorPersonasAtendidas = 0;
+                acumuladorTiempoAtendido = 0;
+                StringBuilder SB = new StringBuilder("");
 
-
-
-            for (int i = 0; i < config.getCantidadSimulacion(); i++)
-            {
-                if (0 <= reloj && reloj <= config.getTiempoSimulacion()) {
-                    if(reloj >= config.getRangoDesde() && contadorLineas < config.getRangoHasta())
-                    {
-                        cargarLinea = true;
-                        contadorLineas++;
-                    }
-                    else
-                    {
-                        cargarLinea = false;
-                    }
-                    if(i == config.getCantidadSimulacion() - 1)
-                    {
-                        cargarLinea = true;
-                    }
-                    siguienteEvento(cargarLinea, i+1);
-                    //System.out.println(linea[0] + " " + evento + " Reloj:" + formato.format(reloj) +" -> " +ListaClientes.toString());
-                    //System.out.println("-----------------------------------------------------");
-                    SB.append("\n");
-                    SB.append(linea[0] + " || " + evento +" "+linea[2] +" || Reloj: " + formato.format(reloj) +" -> " +ListaClientes.toString());
-                    SB.append("\n");
-                    SB.append("----------------------------------------------------------------------------------------------------------------------------------------------");
-
+                if (config.getRangoDesde() == 0) {
+                    cargarLinea = true;
+                    contadorLineas++;
                 }
-            }
-            textAreaClientes.setText(SB.toString());
+                primeraLinea(cargarLinea);
 
-            tablaSimulacion.setModel(tabla);
-            cambiarColoresColumnas();
-            lblResultado.setText("Promedio de permanencia de los clientes:" + acumuladorTiempoAtendido/acumuladorPersonasAtendidas);
-            SwingUtilities.invokeLater( () -> { jTabbedPane1.setSelectedIndex(1);});
-        }else {
-            JOptionPane.showMessageDialog(null,"Complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+                /*System.out.println(linea[0] + " " + evento + " Reloj:" + formato.format(reloj) +" -> " +ListaClientes.toString());
+                 System.out.println("-----------------------------------------------------");*/
+                SB.append("\n");
+                SB.append(linea[0] + " || " + evento + "|| Reloj: " + formato.format(reloj));
+                SB.append("\n");
+                SB.append("----------------------------------------------------------------------------------------------------------------------------------------------");
+
+                for (int i = 0; i < config.getCantidadSimulacion(); i++) {
+                    if (0 <= reloj && reloj <= config.getTiempoSimulacion()) {
+                        if (reloj >= config.getRangoDesde() && contadorLineas < config.getRangoHasta()) {
+                            cargarLinea = true;
+                            contadorLineas++;
+                        } else {
+                            cargarLinea = false;
+                        }
+                        if (i == config.getCantidadSimulacion() - 1) {
+                            cargarLinea = true;
+                        }
+                        siguienteEvento(cargarLinea, i + 1);
+                    //System.out.println(linea[0] + " " + evento + " Reloj:" + formato.format(reloj) +" -> " +ListaClientes.toString());
+                        //System.out.println("-----------------------------------------------------");
+                        SB.append("\n");
+                        SB.append(linea[0] + " || " + evento + " " + linea[2] + " || Reloj: " + formato.format(reloj) + " -> " + ListaClientes.toString());
+                        SB.append("\n");
+                        SB.append("----------------------------------------------------------------------------------------------------------------------------------------------");
+
+                    }
+                }
+                textAreaClientes.setText(SB.toString());
+
+                tablaSimulacion.setModel(tabla);
+                cambiarColoresColumnas();
+                lblResultado.setText("Promedio de permanencia de los clientes:" + acumuladorTiempoAtendido / acumuladorPersonasAtendidas);
+                SwingUtilities.invokeLater(() -> {
+                    jTabbedPane1.setSelectedIndex(1);
+                });
+            } else {
+                JOptionPane.showMessageDialog(null, "Complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
+
 
     }//GEN-LAST:event_btn_simularActionPerformed
 
     private void btn_configuracionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_configuracionActionPerformed
-        
         limpiarSimulacion();
         config = new Configuracion();
         txt_promPermanencia.setText("" + config.getPromedioPermanencia());
@@ -800,8 +750,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_promPermanenciaActionPerformed
 
-    
-    private void limpiarSimulacion(){
+    private void limpiarSimulacion() {
         txt_promPermanencia.setText("");
         txt_tiempo_sim.setText("");
         txt_cantidad_sim.setText("");
@@ -820,9 +769,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jTableProbPostAtencion.setValueAt("", 0, 2);
         jTableProbPostAtencion.setValueAt("", 1, 1);
         jTableProbPostAtencion.setValueAt("", 1, 2);
-        
+
     }
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_configuracion;
