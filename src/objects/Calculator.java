@@ -16,15 +16,34 @@ public class Calculator {
         return rnd.nextDouble();
     }
 
-    public static double calcular_normal(double random, double media, double desviacion) {
+    public static double[] calcular_normal(double random,double random2, double media, double desviacion) {
 
-        double raiz = sqrt((-2) * log(random));
-
-        double segundo_miembro = cos(2 * PI * rnd.nextDouble());
-
-        double z = raiz * segundo_miembro;
-
-        return (media + (desviacion * z));
+        double[] resultado = new double[2];
+        
+        
+        double rnd1 = random;
+        double rnd2 = random2;
+        
+        double lnRND1 = Math.log(rnd1);
+        
+        double factorIzquierdo = ((-2) * lnRND1);
+        double raizFactor = Math.sqrt(factorIzquierdo);
+        
+        double factorDerecho = 2 * (Math.PI) * rnd2;
+        
+        double cosenoFactor = Math.cos(factorDerecho);
+        double senoFactor = Math.sin(factorDerecho);
+        
+        double z1 = raizFactor * cosenoFactor;
+        double z2 = raizFactor * senoFactor;
+        
+        double n1 = ((z1 * desviacion) + media);
+        double n2 = ((z2 * desviacion) + media);
+        
+        resultado[0] = n1;
+        resultado[1] = n2;
+        
+        return resultado;
 
     }
 

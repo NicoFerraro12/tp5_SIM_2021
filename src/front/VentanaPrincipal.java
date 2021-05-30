@@ -3,6 +3,7 @@ package front;
 import control.*;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Toolkit;
 import java.text.DecimalFormat;
 
 import javax.swing.*;
@@ -31,8 +32,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private double acumuladorTiempoAtendido = 0;
     private int contadorClientes = 1;
     private DefaultTableModel tabla;
-    private final Object[] linea = new Object[20];
-    private final Object[] Columnas = {"Id", "Evento", "Cliente nº", "Reloj", "Proxima Llegada", "Estado Emp1", "RND TA", "Tipo Atencion", "RND Duracion Atencion", "Duracion Atencion", "Fin Atencion", "Estado Emp2", "RND TA", "tipo Atencion", "RND Duracion Atencion", "Duracion Atencion", "Fin Atencion", "Cola", "Cantidad Personas atendidas", "Tiempo de permanencia en la biblioteca acumulado"};
+    private int largoLinea = 22;
+    private Object[] linea = new Object[22];
+    private Object[] Columnas = {"Id", "Evento", "Cliente nº", "Reloj", "Proxima Llegada", "Estado Emp1", "RND TA", "Tipo Atencion", "RND DA1", "RND DA2", "Duracion Atencion", "Fin Atencion", "Estado Emp2", "RND TA", "tipo Atencion", "RND DA1", "RND DA2", "Duracion Atencion", "Fin Atencion", "Cola", "Cantidad Personas atendidas", "Tiempo de permanencia en la biblioteca acumulado"};
 
     public VentanaPrincipal(Controller controlador) {
         this.controlador = controlador;
@@ -119,6 +121,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         reloj = r;
         c.setFinLectura(0);
         c.setTipoAtencion("Devolver Libro");
+        c.setPostAtencion(" ");
         c.setYaLeyo(false);
         if (!empleado1.getEstado().equals("Ocupado")) {
             empleado1.realizarAtencion(c, reloj);
@@ -159,6 +162,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
 
     public void cargarLinea(int nroCliente, boolean cargarLinea, int index) {
+
+        linea = new Object[22];
+
         linea[0] = index;
         linea[1] = evento;
         linea[2] = nroCliente;
@@ -168,73 +174,148 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         linea[6] = formato.format(empleado1.getRNDClienteAtendido());
         linea[7] = empleado1.getTipoAtencion();
         linea[8] = formato.format(empleado1.getRnd());
-        linea[9] = formato.format(empleado1.getDuracionAtencion());
-        linea[10] = formato.format(empleado1.getFinAtencion());
-        linea[11] = empleado2.getEstado();
-        linea[12] = formato.format(empleado2.getRNDClienteAtendido());
-        linea[13] = empleado2.getTipoAtencion();
-        linea[14] = formato.format(empleado2.getRnd());
-        linea[15] = formato.format(empleado2.getDuracionAtencion());
-        linea[16] = formato.format(empleado2.getFinAtencion());
-        linea[17] = cola.getLargoCola();
-        linea[18] = acumuladorPersonasAtendidas;
-        linea[19] = formato.format(acumuladorTiempoAtendido);
+        linea[9] = formato.format(empleado1.getRndNormal2());
+        linea[10] = formato.format(empleado1.getDuracionAtencion());
+        linea[11] = formato.format(empleado1.getFinAtencion());
+        linea[12] = empleado2.getEstado();
+        linea[13] = formato.format(empleado2.getRNDClienteAtendido());
+        linea[14] = empleado2.getTipoAtencion();
+        linea[15] = formato.format(empleado2.getRnd());
+        linea[16] = formato.format(empleado2.getRndNormal2());
+        linea[17] = formato.format(empleado2.getDuracionAtencion());
+        linea[18] = formato.format(empleado2.getFinAtencion());
+        linea[19] = cola.getLargoCola();
+        linea[20] = acumuladorPersonasAtendidas;
+        linea[21] = formato.format(acumuladorTiempoAtendido);
+        cargarClientesEnLinea();
         if (cargarLinea) {
+            tabla.setColumnIdentifiers(Columnas);
             tabla.addRow(linea);
         }
 
+    }
+
+    private void cargarClientesEnLinea() {
+        int cantidadClientes = ListaClientes.getLargoCola();
+        int cantidadFilasAAgregar = cantidadClientes * 6;
+        int contador = 0;
+        cantidadFilasAAgregar = cantidadFilasAAgregar + 22;
+        Object[] lineaAux = new Object[cantidadFilasAAgregar];
+        for (int i = 0; i < linea.length; i++) {
+            lineaAux[i] = linea[i];
+        }
+        int j = 0;
+        for (int i = 22; i < lineaAux.length; i++) {
+            if (ListaClientes.obtenerCliente(j).getEstado() ==  "Finalizado" && ListaClientes.obtenerCliente(j).isYaSeMostro()) {
+                lineaAux[i] = " ";
+                i++;
+                lineaAux[i] = " ";
+                i++;
+                lineaAux[i] = " ";
+                i++;
+                lineaAux[i] = " ";
+                i++;
+                lineaAux[i] = " ";
+                i++;
+                lineaAux[i] = " ";
+            } else {
+                lineaAux[i] = ListaClientes.obtenerCliente(j).getNroCliente();
+                i++;
+                lineaAux[i] = ListaClientes.obtenerCliente(j).getEstado();
+                i++;
+                lineaAux[i] = ListaClientes.obtenerCliente(j).getTipoAtencion();
+                i++;
+                lineaAux[i] = formato.format(ListaClientes.obtenerCliente(j).getRndPost());
+                i++;
+                lineaAux[i] = ListaClientes.obtenerCliente(j).getPostAtencion();
+                i++;
+                lineaAux[i] = formato.format(ListaClientes.obtenerCliente(j).getFinLectura());
+                if(ListaClientes.obtenerCliente(j).getEstado() == "Finalizado")
+                {
+                    ListaClientes.obtenerCliente(j).setYaSeMostro(true);
+                }
+                
+            }
+
+            j++;
+        }
+        //largoLinea = lineaAux.length;
+        calcularColumna(lineaAux.length);
+        linea = lineaAux;
+
+    }
+
+    private void calcularColumna(int largo) {
+        Object[] ColumnaAux = new Object[largo];
+        for (int i = 0; i < 22; i++) {
+            ColumnaAux[i] = Columnas[i];
+        }
+        for (int i = 22; i < ColumnaAux.length; i++) {
+            ColumnaAux[i] = "Cliente Nº";
+            i++;
+            ColumnaAux[i] = "Estado";
+            i++;
+            ColumnaAux[i] = "Tipo Atencion";
+            i++;
+            ColumnaAux[i] = "RND PA";
+            i++;
+            ColumnaAux[i] = "Post Atencion";
+            i++;
+            ColumnaAux[i] = "Fin Lectura";
+        }
+        Columnas = ColumnaAux;
     }
 
     private void cambiarColoresColumnas() {
         tablaSimulacion.getColumnModel().getColumn(3).setCellRenderer(
                 new DefaultTableCellRenderer() {
 
-                    @Override
-                    public Component getTableCellRendererComponent(JTable table,
-                            Object value,
-                            boolean isSelected,
-                            boolean hasFocus,
-                            int row,
-                            int column) {
-                        setText(value.toString());
-                        setBackground(isSelected ? Color.GRAY : Color.ORANGE);
-                        return this;
-                    }
-                });
+            @Override
+            public Component getTableCellRendererComponent(JTable table,
+                    Object value,
+                    boolean isSelected,
+                    boolean hasFocus,
+                    int row,
+                    int column) {
+                setText(value.toString());
+                setBackground(isSelected ? Color.GRAY : Color.ORANGE);
+                return this;
+            }
+        });
 
-        for (int i = 5; i <= 10; i++) {
+        for (int i = 5; i <= 11; i++) {
             tablaSimulacion.getColumnModel().getColumn(i).setCellRenderer(
                     new DefaultTableCellRenderer() {
 
-                        @Override
-                        public Component getTableCellRendererComponent(JTable table,
-                                Object value,
-                                boolean isSelected,
-                                boolean hasFocus,
-                                int row,
-                                int column) {
-                            setText(value.toString());
-                            setBackground(isSelected ? Color.GRAY : Color.CYAN);
-                            return this;
-                        }
-                    });
+                @Override
+                public Component getTableCellRendererComponent(JTable table,
+                        Object value,
+                        boolean isSelected,
+                        boolean hasFocus,
+                        int row,
+                        int column) {
+                    setText(value.toString());
+                    setBackground(isSelected ? Color.GRAY : Color.CYAN);
+                    return this;
+                }
+            });
         }
-        for (int i = 11; i <= 16; i++) {
+        for (int i = 12; i <= 18; i++) {
             tablaSimulacion.getColumnModel().getColumn(i).setCellRenderer(
                     new DefaultTableCellRenderer() {
 
-                        @Override
-                        public Component getTableCellRendererComponent(JTable table,
-                                Object value,
-                                boolean isSelected,
-                                boolean hasFocus,
-                                int row,
-                                int column) {
-                            setText(value.toString());
-                            setBackground(isSelected ? Color.GRAY : Color.PINK);
-                            return this;
-                        }
-                    });
+                @Override
+                public Component getTableCellRendererComponent(JTable table,
+                        Object value,
+                        boolean isSelected,
+                        boolean hasFocus,
+                        int row,
+                        int column) {
+                    setText(value.toString());
+                    setBackground(isSelected ? Color.GRAY : Color.PINK);
+                    return this;
+                }
+            });
         }
 
     }
@@ -274,11 +355,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jTableProbPostAtencion = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableProbConsulta = new javax.swing.JTable();
-        jScrollPaneSimulacion = new javax.swing.JScrollPane();
+        jScrollPaneSimulacion = new javax.swing.JScrollPane(tablaSimulacion, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         tablaSimulacion = new javax.swing.JTable();
-        jPanelResultados = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        textAreaClientes = new javax.swing.JTextArea();
         lblResultado = new javax.swing.JLabel();
         btn_resetSim = new javax.swing.JButton();
         btn_configuracion = new javax.swing.JButton();
@@ -528,6 +606,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Configuracion", jPanelConfiguracion);
 
+        jScrollPaneSimulacion.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        jScrollPaneSimulacion.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
         tablaSimulacion.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -539,30 +620,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tablaSimulacion.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPaneSimulacion.setViewportView(tablaSimulacion);
 
         jTabbedPane1.addTab("Simulacion", jScrollPaneSimulacion);
-
-        textAreaClientes.setEditable(false);
-        textAreaClientes.setColumns(20);
-        textAreaClientes.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        textAreaClientes.setRows(5);
-        jScrollPane3.setViewportView(textAreaClientes);
-
-        javax.swing.GroupLayout jPanelResultadosLayout = new javax.swing.GroupLayout(jPanelResultados);
-        jPanelResultados.setLayout(jPanelResultadosLayout);
-        jPanelResultadosLayout.setHorizontalGroup(
-            jPanelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1294, Short.MAX_VALUE)
-        );
-        jPanelResultadosLayout.setVerticalGroup(
-            jPanelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelResultadosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("Clientes", jPanelResultados);
 
         btn_resetSim.setText("Limpiar Parametros");
         btn_resetSim.addActionListener(new java.awt.event.ActionListener() {
@@ -598,14 +659,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(100, 100, 100)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblResultado)
-                                .addGap(245, 245, 245))
+                            .addComponent(lblResultado)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addGap(20, 20, 20)
-                                .addComponent(txt_resultado, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(150, 150, 150)))
+                                .addComponent(txt_resultado, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(150, 150, 150)
                         .addComponent(btn_resetSim, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btn_configuracion)
@@ -636,6 +695,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void btn_resetSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_resetSimActionPerformed
         limpiarSimulacion();
+        SwingUtilities.invokeLater(() -> {
+                jTabbedPane1.setSelectedIndex(0);
+            });
     }//GEN-LAST:event_btn_resetSimActionPerformed
 
     private boolean validarCampos() {
@@ -683,7 +745,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             cola = new ColaEspera(config);
             ListaClientes = new ColaEspera(config);
             tabla = new DefaultTableModel();
-            tabla.setColumnIdentifiers(Columnas);
+            //tabla.setColumnIdentifiers(Columnas);
             boolean cargarLinea = false;
             contadorClientes = 1;
             int contadorLineas = 0;
@@ -699,11 +761,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
             /*System.out.println(linea[0] + " " + evento + " Reloj:" + formato.format(reloj) +" -> " +ListaClientes.toString());
              System.out.println("-----------------------------------------------------");*/
-            SB.append("\n");
+ /*SB.append("\n");
             SB.append(linea[0]).append(" || ").append(evento).append("|| Reloj: ").append(formato.format(reloj));
             SB.append("\n");
-            SB.append("----------------------------------------------------------------------------------------------------------------------------------------------");
-
+            SB.append(ListaClientes.getLargoCola());*/
             for (int i = 0; i < config.getCantidadSimulacion(); i++) {
                 if (0 <= reloj && reloj <= config.getTiempoSimulacion()) {
                     if (reloj >= config.getRangoDesde() && contadorLineas < config.getRangoHasta()) {
@@ -717,19 +778,26 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     }
                     siguienteEvento(cargarLinea, i + 1);
                     //System.out.println(linea[0] + " " + evento + " Reloj:" + formato.format(reloj) +" -> " +ListaClientes.toString());
-                    //System.out.println("-----------------------------------------------------");
-                    SB.append("\n");
+
+                    /*SB.append("\n");
                     SB.append(linea[0]).append(" || ").append(evento).append(" ").append(linea[2]).append(" || Reloj: ").append(formato.format(reloj)).append(" -> ").append(ListaClientes.toString());
                     SB.append("\n");
-                    SB.append("----------------------------------------------------------------------------------------------------------------------------------------------");
 
+                    SB.append("Cantidad Clientes" + ListaClientes.getLargoCola());
+                                        SB.append("\n");
+                               
+                    SB.append("----------------------------------------------------------------------------------------------------------------------------------------------");
+                     */
                 }
             }
-            textAreaClientes.setText(SB.toString());
+            //textAreaClientes.setText(SB.toString());
 
             tablaSimulacion.setModel(tabla);
+            tablaSimulacion.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            tablaSimulacion.setPreferredScrollableViewportSize(Toolkit.getDefaultToolkit().getScreenSize());
+
             cambiarColoresColumnas();
-            txt_resultado.setText("" + acumuladorTiempoAtendido / acumuladorPersonasAtendidas);
+            txt_resultado.setText("" + formato.format(acumuladorTiempoAtendido / acumuladorPersonasAtendidas));
             SwingUtilities.invokeLater(() -> {
                 jTabbedPane1.setSelectedIndex(1);
             });
@@ -757,6 +825,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jTableProbPostAtencion.setValueAt(0.40, 0, 2);
         jTableProbPostAtencion.setValueAt(0.60, 1, 1);
         jTableProbPostAtencion.setValueAt(1.00, 1, 2);
+        SwingUtilities.invokeLater(() -> {
+                jTabbedPane1.setSelectedIndex(0);
+            });
     }//GEN-LAST:event_btn_configuracionActionPerformed
 
     private void txt_promPermanenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_promPermanenciaActionPerformed
@@ -804,17 +875,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelParametros;
     private javax.swing.JPanel jPanelProb;
     private javax.swing.JPanel jPanelRango;
-    private javax.swing.JPanel jPanelResultados;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPaneSimulacion;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTableProbConsulta;
     private javax.swing.JTable jTableProbPostAtencion;
     private javax.swing.JLabel lblResultado;
     private javax.swing.JTable tablaSimulacion;
-    private javax.swing.JTextArea textAreaClientes;
     private javax.swing.JTextField txt_cant_filas;
     private javax.swing.JTextField txt_cantidad_sim;
     private javax.swing.JTextField txt_consulta_desde;
