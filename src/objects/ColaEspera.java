@@ -23,6 +23,11 @@ public class ColaEspera {
     public Cliente obtenerProximo() {
         return cola.get(0);
     }
+    
+    public Cliente obtenerCliente(int c)
+    {
+        return cola.get(c);
+    }
 
     public void agregarACola(Cliente c) {
         cola.add(c);

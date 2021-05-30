@@ -18,6 +18,7 @@ public class Cliente {
     private Boolean yaLeyo = false;
     private double horaLlegada = 0;
     private Configuracion configuracion = Configuracion.getConfiguracion();
+    private boolean yaSeMostro = false;
 
     public Cliente(int nroc, double hora, Configuracion config) {
         this.nroCliente = nroc;
@@ -30,6 +31,7 @@ public class Cliente {
         this.yaLeyo = false;
         this.horaLlegada = hora;
         configuracion = config;
+        this.yaSeMostro =  false;
         TipoAtencion();
     }
 
@@ -43,7 +45,7 @@ public class Cliente {
             estado = "Leyendo";
 
         } else {
-            nroCliente = 0;
+            //nroCliente = 0;
             estado = "Finalizado";
             postAtencion = "Retirarse";
         }
@@ -135,4 +137,14 @@ public class Cliente {
     public double getHoraLlegada() {
         return horaLlegada;
     }
+
+    public boolean isYaSeMostro() {
+        return yaSeMostro;
+    }
+
+    public void setYaSeMostro(boolean yaSeMostro) {
+        this.yaSeMostro = yaSeMostro;
+    }
+    
+    
 }
