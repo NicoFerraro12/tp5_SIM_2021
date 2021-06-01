@@ -11,12 +11,12 @@ import model.Configuracion;
  */
 public class ColaEspera {
 
-    private ArrayList<Cliente> cola;
+    private final ArrayList<Cliente> cola;
     private Configuracion config = Configuracion.getConfiguracion();
     private final DecimalFormat formato = new DecimalFormat("0.00");
 
     public ColaEspera(Configuracion config) {
-        this.cola = new ArrayList<Cliente>();
+        this.cola = new ArrayList<>();
         this.config = config;
     }
 
@@ -38,18 +38,14 @@ public class ColaEspera {
     }
 
     public boolean hayCola() {
-        if (cola.size() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return cola.size() > 0;
     }
 
     public void reducirCola() {
         try {
             cola.remove(0);
         } catch (Exception e) {
-        };
+        }
     }
 
     public void vaciarCola() {
@@ -78,6 +74,7 @@ public class ColaEspera {
         return aux;
     }
 
+    @Override
     public String toString() {
         String linea = "";
         for (int i = 0; i < cola.size(); i++) {

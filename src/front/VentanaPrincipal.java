@@ -32,7 +32,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private double acumuladorTiempoAtendido = 0;
     private int contadorClientes = 1;
     private DefaultTableModel tabla;
-    private int largoLinea = 22;
     private Object[] linea = new Object[22];
     private Object[] Columnas = {"Id", "Evento", "Cliente nº", "Reloj", "Proxima Llegada", "Estado Emp1", "RND TA", "Tipo Atencion", "RND DA1", "RND DA2", "Duracion Atencion", "Fin Atencion", "Estado Emp2", "RND TA", "tipo Atencion", "RND DA1", "RND DA2", "Duracion Atencion", "Fin Atencion", "Cola", "Cantidad Personas atendidas", "Tiempo de permanencia en la biblioteca acumulado"};
 
@@ -198,7 +197,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void cargarClientesEnLinea() {
         int cantidadClientes = ListaClientes.getLargoCola();
         int cantidadFilasAAgregar = cantidadClientes * 6;
-        int contador = 0;
         cantidadFilasAAgregar = cantidadFilasAAgregar + 22;
         Object[] lineaAux = new Object[cantidadFilasAAgregar];
         for (int i = 0; i < linea.length; i++) {
@@ -206,7 +204,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
         int j = 0;
         for (int i = 22; i < lineaAux.length; i++) {
-            if (ListaClientes.obtenerCliente(j).getEstado() ==  "Finalizado" && ListaClientes.obtenerCliente(j).isYaSeMostro()) {
+            if (ListaClientes.obtenerCliente(j).getEstado().equals("Finalizado") && ListaClientes.obtenerCliente(j).isYaSeMostro()) {
                 lineaAux[i] = " ";
                 i++;
                 lineaAux[i] = " ";
@@ -230,7 +228,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 lineaAux[i] = ListaClientes.obtenerCliente(j).getPostAtencion();
                 i++;
                 lineaAux[i] = formato.format(ListaClientes.obtenerCliente(j).getFinLectura());
-                if(ListaClientes.obtenerCliente(j).getEstado() == "Finalizado")
+                if(ListaClientes.obtenerCliente(j).getEstado().equals("Finalizado"))
                 {
                     ListaClientes.obtenerCliente(j).setYaSeMostro(true);
                 }
@@ -239,7 +237,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
             j++;
         }
-        //largoLinea = lineaAux.length;
         calcularColumna(lineaAux.length);
         linea = lineaAux;
 
@@ -745,13 +742,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             cola = new ColaEspera(config);
             ListaClientes = new ColaEspera(config);
             tabla = new DefaultTableModel();
-            //tabla.setColumnIdentifiers(Columnas);
             boolean cargarLinea = false;
             contadorClientes = 1;
             int contadorLineas = 0;
             acumuladorPersonasAtendidas = 0;
             acumuladorTiempoAtendido = 0;
-            StringBuilder SB = new StringBuilder("");
 
             if (config.getRangoDesde() == 0) {
                 cargarLinea = true;
@@ -766,7 +761,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             SB.append("\n");
             SB.append(ListaClientes.getLargoCola());*/
             for (int i = 0; i < config.getCantidadSimulacion(); i++) {
-                if (0 <= reloj && reloj <= config.getTiempoSimulacion()) {
+                if (0 <= reloj && reloj < config.getTiempoSimulacion()) {
                     if (reloj >= config.getRangoDesde() && contadorLineas < config.getRangoHasta()) {
                         cargarLinea = true;
                         contadorLineas++;
@@ -777,6 +772,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         cargarLinea = true;
                     }
                     siguienteEvento(cargarLinea, i + 1);
+                    if(reloj >= config.getTiempoSimulacion())
+                    {
+                        cargarLinea = true;
+                        siguienteEvento(cargarLinea, i+2);
+                    }
+
+                   
                     //System.out.println(linea[0] + " " + evento + " Reloj:" + formato.format(reloj) +" -> " +ListaClientes.toString());
 
                     /*SB.append("\n");
@@ -790,8 +792,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                      */
                 }
             }
-            //textAreaClientes.setText(SB.toString());
-
             tablaSimulacion.setModel(tabla);
             tablaSimulacion.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             tablaSimulacion.setPreferredScrollableViewportSize(Toolkit.getDefaultToolkit().getScreenSize());
