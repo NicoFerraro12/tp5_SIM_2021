@@ -2,8 +2,6 @@ package objects;
 
 import java.util.Random;
 
-import static java.lang.Math.*;
-
 public class Calculator {
 
     private static final Random rnd = new Random();

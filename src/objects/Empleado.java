@@ -36,28 +36,27 @@ public class Empleado {
     }
 
     public void realizarAtencion(Cliente c, double reloj) {
-        Calculator calculadora = new Calculator();
         clienteAtendido = c;
         //rnd = c.getRndTipoAtencion();
         rnd = Math.random();
 
-        if (clienteAtendido.getTipoAtencion() == "Pedir Libro") {
+        if (clienteAtendido.getTipoAtencion().equals("Pedir Libro")) {
             tipoAtencion = "Pedir Libro";
             estado = "Ocupado";
             c.setEstado("Atendido");
             double lambda = 0.1666;
-            duracionAtencion = calculadora.calcular_exponencial(rnd, lambda);
+            duracionAtencion = Calculator.calcular_exponencial(rnd, lambda);
             finAtencion = reloj + duracionAtencion;
 
         } else {
-            if (clienteAtendido.getTipoAtencion() == "Devolver Libro") {
+            if (clienteAtendido.getTipoAtencion().equals("Devolver Libro")) {
                 tipoAtencion = "Devolver Libro";
                 estado = "Ocupado";
                 c.setEstado("Atendido");
                 if (primeroUsado == false && segundoUsado == false) {
                     rndNormal1 = Math.random();
                     rndNormal2 = Math.random();
-                    duracionAtencionNormal = calculadora.calcular_normal(rndNormal1, rndNormal2, 2, 0.5);
+                    duracionAtencionNormal = Calculator.calcular_normal(rndNormal1, rndNormal2, 2, 0.5);
                     duracionAtencion = duracionAtencionNormal[0];
                     primeroUsado = true;
                 } else {
@@ -72,12 +71,12 @@ public class Empleado {
                 finAtencion = reloj + duracionAtencion;
 
             } else {
-                if (clienteAtendido.getTipoAtencion() == "Consulta")// en el caso que salga el 1 por eso <=
+                if (clienteAtendido.getTipoAtencion().equals("Consulta"))// en el caso que salga el 1 por eso <=
                 {
                     tipoAtencion = "Consulta";
                     estado = "Ocupado";
                     c.setEstado("Atendido");
-                    duracionAtencion = calculadora.calcular_uniforme(rnd, configuracion.getConsultaDesde(), configuracion.getConsultaHasta());
+                    duracionAtencion = Calculator.calcular_uniforme(rnd, configuracion.getConsultaDesde(), configuracion.getConsultaHasta());
                     finAtencion = reloj + duracionAtencion;
                 } else {
                     System.out.println("error calculando la atencion");
@@ -88,7 +87,7 @@ public class Empleado {
     }
 
     public void finalizarAtencion(double reloj) {
-        if (tipoAtencion == "Pedir Libro") {
+        if (tipoAtencion.equals("Pedir Libro")) {
             clienteAtendido.PostAtencion(reloj);
 
         } else {
@@ -107,7 +106,7 @@ public class Empleado {
     }
 
     public void finalizarAtencionConCola(double reloj, Cliente c) {
-        if (tipoAtencion == "Pedir Libro") {
+        if (tipoAtencion.equals("Pedir Libro")) {
             clienteAtendido.PostAtencion(reloj);
             horaClienteAtendido = clienteAtendido.getHoraLlegada();
         }
@@ -133,7 +132,7 @@ public class Empleado {
     }
 
     public double getRnd() {
-        if (clienteAtendido.getTipoAtencion() == "Devolver Libro") 
+        if (clienteAtendido.getTipoAtencion().equals("Devolver Libro")) 
         {
             return this.rndNormal1;
 
@@ -146,7 +145,7 @@ public class Empleado {
     }
 
     public double getRndNormal2() {
-        if (clienteAtendido.getTipoAtencion() == "Devolver Libro") 
+        if (clienteAtendido.getTipoAtencion().equals("Devolver Libro"))
         {
             return this.rndNormal2;
 
